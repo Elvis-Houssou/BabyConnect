@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Radius */
+    --radius: 0.5rem;
+    
+    /* Background & Foreground - Ivoire (#FFF9F4) */
+    --background: 30 100% 98%;
+    --foreground: 348 20% 20%;
+    
+    /* Primary Colors - Rose blush (#F4B6C2) */
+    --primary: 348 70% 83%;
+    --primary-foreground: 30 100% 98%;
+    --primary-50: 348 100% 97%;
+    --primary-100: 348 90% 94%;
+    --primary-200: 348 80% 90%;
+    --primary-300: 348 70% 85%;
+    --primary-400: 348 65% 80%;
+    --primary-500: 348 70% 83%;
+    --primary-600: 348 75% 75%;
+    --primary-700: 348 80% 65%;
+    --primary-800: 348 85% 55%;
+    --primary-900: 348 90% 45%;
+    --primary-950: 348 95% 35%;
+    
+    /* Secondary Colors - Lavande claire (#E6D9F2) */
+    --secondary: 270 50% 92%;
+    --secondary-foreground: 348 20% 20%;
+    --secondary-50: 270 60% 98%;
+    --secondary-100: 270 55% 96%;
+    --secondary-200: 270 50% 94%;
+    --secondary-300: 270 45% 90%;
+    --secondary-400: 270 40% 85%;
+    --secondary-500: 270 50% 92%;
+    --secondary-600: 270 55% 80%;
+    --secondary-700: 270 60% 70%;
+    --secondary-800: 270 65% 60%;
+    --secondary-900: 270 70% 50%;
+    
+    /* Accent Colors - Or doux (#F7D046) */
+    --accent: 48 90% 62%;
+    --accent-foreground: 348 20% 20%;
+    
+    /* Destructive Colors */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 30 100% 98%;
+    
+    /* Muted Colors - Gris perle (#EDEDED) */
+    --muted: 0 0% 93%;
+    --muted-foreground: 348 10% 45%;
+    
+    /* Border & Input */
+    --border: 270 20% 88%;
+    --input: 270 20% 88%;
+    --ring: 348 70% 83%;
+    
+    /* Card & Popover */
+    --card: 30 100% 98%;
+    --card-foreground: 348 20% 20%;
+    --popover: 30 100% 98%;
+    --popover-foreground: 348 20% 20%;
+    
+    /* Sidebar */
+    --sidebar-background: 30 100% 98%;
+    --sidebar-foreground: 348 20% 20%;
+    --sidebar-primary: 348 70% 83%;
+    --sidebar-primary-foreground: 30 100% 98%;
+    --sidebar-accent: 270 50% 92%;
+    --sidebar-accent-foreground: 348 20% 20%;
+    --sidebar-border: 270 20% 88%;
+    --sidebar-ring: 348 70% 83%;
+    
+    /* Charts - Palette harmonisée */
+    --chart-1: 348 70% 83%;
+    --chart-2: 270 50% 92%;
+    --chart-3: 48 90% 62%;
+    --chart-4: 348 60% 75%;
+    --chart-5: 270 40% 85%;
+    
+    /* Fonts */
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+  
+  .dark {
+    /* Background & Foreground - Version sombre */
+    --background: 348 20% 10%;
+    --foreground: 30 50% 95%;
+    
+    /* Primary Colors - Rose blush plus foncé */
+    --primary: 348 60% 70%;
+    --primary-foreground: 30 50% 95%;
+    
+    /* Secondary Colors - Lavande plus foncée */
+    --secondary: 270 30% 25%;
+    --secondary-foreground: 30 50% 95%;
+    
+    /* Accent Colors - Or doux plus foncé */
+    --accent: 48 80% 55%;
+    --accent-foreground: 30 50% 95%;
+    
+    /* Destructive Colors */
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 30 50% 95%;
+    
+    /* Muted Colors */
+    --muted: 270 15% 20%;
+    --muted-foreground: 270 10% 65%;
+    
+    /* Border & Input */
+    --border: 270 20% 25%;
+    --input: 270 20% 25%;
+    --ring: 348 60% 70%;
+    
+    /* Card & Popover */
+    --card: 348 20% 12%;
+    --card-foreground: 30 50% 95%;
+    --popover: 348 20% 12%;
+    --popover-foreground: 30 50% 95%;
+    
+    /* Sidebar */
+    --sidebar-background: 348 20% 12%;
+    --sidebar-foreground: 30 50% 95%;
+    --sidebar-primary: 348 60% 70%;
+    --sidebar-primary-foreground: 30 50% 95%;
+    --sidebar-accent: 270 30% 25%;
+    --sidebar-accent-foreground: 30 50% 95%;
+    --sidebar-border: 270 20% 25%;
+    --sidebar-ring: 348 60% 70%;
+    
+    /* Charts - Palette harmonisée pour dark mode */
+    --chart-1: 348 60% 70%;
+    --chart-2: 270 40% 60%;
+    --chart-3: 48 80% 55%;
+    --chart-4: 348 50% 60%;
+    --chart-5: 270 30% 50%;
+  }
+  
+  * {
+    border-color: hsl(var(--border));
+  }
+  
+  html,
+  body {
+    @apply max-w-[100vw] overflow-x-hidden;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  a {
+    @apply text-inherit no-underline transition-colors;
+  }
+  
+  button {
+    @apply cursor-pointer;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Selection color */
+  ::selection {
+    background-color: hsl(var(--primary) / 0.2);
+    color: hsl(var(--primary-foreground));
+  }
+  
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: hsl(var(--muted));
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 9999px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
+@layer utilities {
+  /* Text balance */
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-600;
+  }
+  
+  /* Glass morphism */
+  .glass {
+    backdrop-filter: blur(12px);
+    background-color: hsl(var(--background) / 0.8);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+  
+  /* Animated gradient background */
+  .gradient-animated {
+    background-size: 200% 200%;
+    animation: gradient-x 15s ease infinite;
+  }
+  
+  /* Shimmer effect */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s linear infinite;
+  }
+}
+
+
+
