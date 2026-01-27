@@ -1,5 +1,5 @@
 import os
-
+import secrets
 
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
@@ -8,20 +8,23 @@ from jose import jwt, JWTError
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from pwdlib import PasswordHash
-from schemas.user import UserInDB
-from models.user import User
+from app.schemas.user import UserInDB
+from app.schemas.refresh_token import RefreshTokenCreate
+from app.models.user import User
+from app.models.refresh_token import RefreshToken
 from sqlalchemy.orm import Session
-from core.database import get_db
-from core.config import Settings
+from app.core.database import get_db
+from app.core.config import settings
 
 
-SECRET_KEY = Settings.secret_key
+SECRET_KEY = settings.SECRET_KEY
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY is not set")
 
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_DAYS = 30
 
 password_hash = PasswordHash.recommended()
 
@@ -60,6 +63,22 @@ def create_access_token(user_id: int):
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     payload = {"sub": str(user_id), "exp": expire}
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+def refresh_access_token(db: Session, user_id: int):
+    token = secrets.token_urlsafe(32)
+    expires_at = datetime.now(timezone.utc) + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
+    
+    refresh = RefreshToken(
+        user_id = user_id,
+        token = token,
+        expires_at=expires_at,
+    )
+    
+    db.add(refresh)
+    db.commit()
+    db.refresh(refresh)
+
+    return token
 
 
 async def get_current_user(
