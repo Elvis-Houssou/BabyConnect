@@ -3,6 +3,7 @@ from app.models.user import User
 from app.schemas.user import UserCreate
 from fastapi import HTTPException, status
 from app.core.dependencies import bcrypt_context
+from app.core.security import get_password_hash
 
 def register_user(db: Session, user: UserCreate):
     # Vérification si l'email existe déjà
@@ -18,7 +19,7 @@ def register_user(db: Session, user: UserCreate):
         first_name = user.first_name or None, 
         last_name = user.last_name or None, 
         phone = user.phone or None, 
-        hashed_password = bcrypt_context.hash(user.password)
+        hashed_password = get_password_hash(user.password)
     )
     db.add(new_user)
     db.commit()

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
@@ -20,27 +20,46 @@ router = APIRouter(
     tags=["Auth"]
 )
 
-@router.post("/token")
+@router.post("/login")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: Session = Depends(get_db)
 ) -> Token:
-    user = authenticate_user(User, form_data.username, form_data.password)
+    user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token( data={"sub": user.id})
-    refresh_token = refresh_access_token(get_db, user.id)
+    access_token = create_access_token(user.id)
+    refresh_token = refresh_access_token(db, user.id)
 
-    response = JSONResponse(content={
-        "access_token": access_token,
-        "token_type": "bearer",
-        "refresh_token": refresh_token
-    })
-    # return Token(access_token=access_token, token_type="bearer")
+    response = JSONResponse(content={"success": True, "message": "Login successful"})
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,          # True en production HTTPS
+        samesite="lax",
+        max_age=60 * 15,
+    )
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+        max_age=60 * 60 * 24 * 7,
+    )
+
+    # response = JSONResponse(content={
+    #     "access_token": access_token,
+    #     "token_type": "bearer",
+    #     "refresh_token": refresh_token
+    # })
     return response
 
 
@@ -52,17 +71,28 @@ async def read_users_me(
 
 @router.post("/refresh")
 async def refresh_access_token_endpoint(
-    refresh_token: str,
+    request: Request,
     db: Session = Depends(get_db)
 ):
+    refresh_token = request.cookies.get("refresh_token")
+
     db_token = db.query(RefreshToken).filter_by(token=refresh_token, is_revoked=False).first()
+
     if not db_token or db_token.expires_at < datetime.now(timezone.utc):
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
     
     # Crée un nouvel access token
-    new_access_token = create_access_token(data={"sub": db_token.user_id})
+    new_access_token = create_access_token(db_token.user_id)
     
-    return {"access_token": new_access_token, "token_type": "bearer"}
+    response = JSONResponse({"message": "refreshed"})
+    response.set_cookie(
+        key="access_token",
+        value=new_access_token,
+        httponly=True,
+        max_age=900,
+    )
+    return response
+    # return {"access_token": new_access_token, "token_type": "bearer"}
 
 
 @router.get("/users/me/items/")

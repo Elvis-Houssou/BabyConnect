@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from jose import jwt, JWTError
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordBearer
 from pwdlib import PasswordHash
 from app.schemas.user import UserInDB
@@ -28,7 +28,7 @@ ACCESS_TOKEN_EXPIRE_DAYS = 30
 
 password_hash = PasswordHash.recommended()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def verify_password(plain_password, hashed_password):
     return password_hash.verify(plain_password, hashed_password)
@@ -37,13 +37,11 @@ def get_password_hash(password):
     return password_hash.hash(password)
 
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
+def get_user(db, email: str):
+    return db.query(User).filter(User.email == email).first()
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authenticate_user(db: Session, email: str, password: str):
+    user = get_user(db, email)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -82,10 +80,14 @@ def refresh_access_token(db: Session, user_id: int):
 
 
 async def get_current_user(
-    token: Annotated[str, Depends(oauth2_scheme)], 
+    # token: Annotated[str, Depends(oauth2_scheme)],
+    request: Request, 
     db: Session = Depends(get_db)
 ):
     try:
+        token = request.cookies.get("access_token")
+        if not token:
+            raise HTTPException(status_code=401, detail="Not authenticated")
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = int(payload.get("sub"))
     except JWTError:
@@ -101,6 +103,6 @@ async def get_current_user(
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
-    if current_user.disabled:
+    if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

@@ -20,35 +20,35 @@ module.exports = {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
-			primary: {
-				'50': 'hsl(var(--primary-50))',
-				'100': 'hsl(var(--primary-100))',
-				'200': 'hsl(var(--primary-200))',
-				'300': 'hsl(var(--primary-300))',
-				'400': 'hsl(var(--primary-400))',
-				'500': 'hsl(var(--primary-500))',
-				'600': 'hsl(var(--primary-600))',
-				'700': 'hsl(var(--primary-700))',
-				'800': 'hsl(var(--primary-800))',
-				'900': 'hsl(var(--primary-900))',
-				'950': 'hsl(var(--primary-950))',
-				DEFAULT: 'hsl(var(--primary))',
-				foreground: 'hsl(var(--primary-foreground))'
-			},
-			secondary: {
-				'50': 'hsl(var(--secondary-50))',
-				'100': 'hsl(var(--secondary-100))',
-				'200': 'hsl(var(--secondary-200))',
-				'300': 'hsl(var(--secondary-300))',
-				'400': 'hsl(var(--secondary-400))',
-				'500': 'hsl(var(--secondary-500))',
-				'600': 'hsl(var(--secondary-600))',
-				'700': 'hsl(var(--secondary-700))',
-				'800': 'hsl(var(--secondary-800))',
-				'900': 'hsl(var(--secondary-900))',
-				DEFAULT: 'hsl(var(--secondary))',
-				foreground: 'hsl(var(--secondary-foreground))'
-			},
+  			primary: {
+  				'50': 'hsl(var(--primary-50))',
+  				'100': 'hsl(var(--primary-100))',
+  				'200': 'hsl(var(--primary-200))',
+  				'300': 'hsl(var(--primary-300))',
+  				'400': 'hsl(var(--primary-400))',
+  				'500': 'hsl(var(--primary-500))',
+  				'600': 'hsl(var(--primary-600))',
+  				'700': 'hsl(var(--primary-700))',
+  				'800': 'hsl(var(--primary-800))',
+  				'900': 'hsl(var(--primary-900))',
+  				'950': 'hsl(var(--primary-950))',
+  				DEFAULT: 'hsl(var(--primary))',
+  				foreground: 'hsl(var(--primary-foreground))'
+  			},
+  			secondary: {
+  				'50': 'hsl(var(--secondary-50))',
+  				'100': 'hsl(var(--secondary-100))',
+  				'200': 'hsl(var(--secondary-200))',
+  				'300': 'hsl(var(--secondary-300))',
+  				'400': 'hsl(var(--secondary-400))',
+  				'500': 'hsl(var(--secondary-500))',
+  				'600': 'hsl(var(--secondary-600))',
+  				'700': 'hsl(var(--secondary-700))',
+  				'800': 'hsl(var(--secondary-800))',
+  				'900': 'hsl(var(--secondary-900))',
+  				DEFAULT: 'hsl(var(--secondary))',
+  				foreground: 'hsl(var(--secondary-foreground))'
+  			},
   			accent: {
   				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))'
@@ -72,16 +72,16 @@ module.exports = {
   				DEFAULT: 'hsl(var(--popover))',
   				foreground: 'hsl(var(--popover-foreground))'
   			},
-			sidebar: {
-				DEFAULT: 'hsl(var(--sidebar-background))',
-				foreground: 'hsl(var(--sidebar-foreground))',
-				primary: 'hsl(var(--sidebar-primary))',
-				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-				accent: 'hsl(var(--sidebar-accent))',
-				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-				border: 'hsl(var(--sidebar-border))',
-				ring: 'hsl(var(--sidebar-ring))'
-			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
+  			},
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
@@ -89,22 +89,20 @@ module.exports = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
-			// Palette Baby Girl
-			'rose-blush': '#F4B6C2',
-			'ivoire': '#FFF9F4',
-			'lavande': '#E6D9F2',
-			'gris-perle': '#EDEDED',
-			'or-doux': '#F7D046',
-			// Couleurs supplémentaires
-			blue: '#1fb6ff',
-			purple: '#7e5bef',
-			pink: '#ff49db',
-			orange: '#ff7849',
-			green: '#13ce66',
-			yellow: '#ffc82c',
-			'gray-dark': '#273444',
-			gray: '#8492a6',
-			'gray-light': '#d3dce6'
+  			'rose-blush': '#F4B6C2',
+  			ivoire: '#FFF9F4',
+  			lavande: '#E6D9F2',
+  			'gris-perle': '#EDEDED',
+  			'or-doux': '#F7D046',
+  			blue: '#1fb6ff',
+  			purple: '#7e5bef',
+  			pink: '#ff49db',
+  			orange: '#ff7849',
+  			green: '#13ce66',
+  			yellow: '#ffc82c',
+  			'gray-dark': '#273444',
+  			gray: '#8492a6',
+  			'gray-light': '#d3dce6'
   		},
   		fontFamily: {
   			sans: [
