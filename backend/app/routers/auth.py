@@ -14,6 +14,7 @@ from app.core.database import get_db
 
 from app.core.security import authenticate_user, create_access_token, refresh_access_token, get_current_active_user, ACCESS_TOKEN_EXPIRE_MINUTES
 from app.models.refresh_token import RefreshToken
+from app.services.cookie_service import set_cookie_for_env
 
 router = APIRouter(
     prefix="/auth",
@@ -23,6 +24,7 @@ router = APIRouter(
 @router.post("/login")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    request: Request,
     db: Session = Depends(get_db)
 ) -> Token:
     user = authenticate_user(db, form_data.username, form_data.password)
@@ -37,29 +39,9 @@ async def login_for_access_token(
 
     response = JSONResponse(content={"success": True, "message": "Login successful"})
 
-    response.set_cookie(
-        key="access_token",
-        value=access_token,
-        httponly=True,
-        secure=False,          # True en production HTTPS
-        samesite="lax",
-        max_age=60 * 15,
-    )
+    set_cookie_for_env(response, 'access_token', access_token, request)
+    set_cookie_for_env(response, 'refresh_token', refresh_token, request)
 
-    response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        httponly=True,
-        secure=False,
-        samesite="lax",
-        max_age=60 * 60 * 24 * 7,
-    )
-
-    # response = JSONResponse(content={
-    #     "access_token": access_token,
-    #     "token_type": "bearer",
-    #     "refresh_token": refresh_token
-    # })
     return response
 
 @router.post("/logout")
@@ -107,12 +89,9 @@ async def refresh_access_token_endpoint(
     new_access_token = create_access_token(db_token.user_id)
     
     response = JSONResponse({"message": "refreshed"})
-    response.set_cookie(
-        key="access_token",
-        value=new_access_token,
-        httponly=True,
-        max_age=900,
-    )
+    
+    set_cookie_for_env(response, 'access_token', new_access_token, request)
+    
     return response
 
 
