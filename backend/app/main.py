@@ -13,7 +13,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000", 
-        "https://baby-connect-get9bsdz3-elvishoussou.vercel.app"
+        "https://baby-connect-get9bsdz3-elvishoussou.vercel.app",
+        "https://baby-connect-alpha.vercel.app/",
     ],
     allow_credentials=True,
     allow_methods=["*"],
