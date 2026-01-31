@@ -10,8 +10,11 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Calendar, Home, Inbox, LogOut, Search, Settings } from "lucide-react"
 import Link from "next/link"
+import Auth from "@/api/admin"
+import { useAuthContext } from "@/context/AuthContext"
 
 const items = [
     {
@@ -26,6 +29,8 @@ const items = [
     },
 ]
 export function DashboardSideBar () {
+    const { logout } = useAuthContext()
+
     return (
         <Sidebar>
             <SidebarContent>
@@ -48,7 +53,14 @@ export function DashboardSideBar () {
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
-                deconnecter
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={logout}
+                >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Deconnexion
+                </Button>
             </SidebarFooter>
         </Sidebar>
     )

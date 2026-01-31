@@ -11,8 +11,8 @@ Auth.login = async (data: any) => {
     });
 }
 
-Auth.logout = async (data: any) => {
-    return api.post("/auth/logout", data, {
+Auth.logout = async () => {
+    return api.post("/auth/logout", {}, {
         headers: {
             "Content-Type": "application/json"
         }

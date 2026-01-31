@@ -24,7 +24,7 @@ if not SECRET_KEY:
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-ACCESS_TOKEN_EXPIRE_DAYS = 30
+REFRESH_TOKEN_EXPIRE_DAYS  = 30
 
 password_hash = PasswordHash.recommended()
 
@@ -64,7 +64,7 @@ def create_access_token(user_id: int):
 
 def refresh_access_token(db: Session, user_id: int):
     token = secrets.token_urlsafe(32)
-    expires_at = datetime.now(timezone.utc) + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
+    expires_at = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS )
     
     refresh = RefreshToken(
         user_id = user_id,
@@ -104,5 +104,5 @@ async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
     if not current_user.is_active:
-        raise HTTPException(status_code=400, detail="Inactive user")
+        raise HTTPException(status_code=401, detail="Inactive user")
     return current_user

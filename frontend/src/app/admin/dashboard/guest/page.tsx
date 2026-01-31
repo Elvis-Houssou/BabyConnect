@@ -17,7 +17,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 // import { AttendanceChart } from "./attendance-chart"
 import { GuestsList } from "@/components/dashboard/guests-list"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Guest from "@/api/guest"
 // import { TimelineChart } from "./timeline-chart"
 
 interface Guest {
@@ -36,113 +37,40 @@ interface DashboardContentProps {
   guests: Guest[]
   userEmail: string
 }
-// Donnees statiques pour la demonstration
-const mockGuests = [
-    {
-      id: "1",
-      first_name: "Marie",
-      last_name: "Dupont",
-      email: "marie.dupont@email.com",
-      phone: "06 12 34 56 78",
-      attending: true,
-      number_of_guests: 2,
-      message: "Felicitations pour cette merveilleuse nouvelle ! Nous avons tellement hate de rencontrer ce petit bout de chou. Prenez bien soin de vous.",
-      created_at: "2026-01-25T10:30:00Z",
-    },
-    {
-      id: "2",
-      first_name: "Pierre",
-      last_name: "Martin",
-      email: "pierre.martin@email.com",
-      phone: "06 98 76 54 32",
-      attending: true,
-      number_of_guests: 3,
-      message: "Quelle joie d'apprendre cette nouvelle ! Toute la famille sera presente.",
-      created_at: "2026-01-24T14:15:00Z",
-    },
-    {
-      id: "3",
-      first_name: "Sophie",
-      last_name: "Bernard",
-      email: "sophie.bernard@email.com",
-      phone: null,
-      attending: false,
-      number_of_guests: 0,
-      message: "Malheureusement, je serai en voyage a cette periode. Je vous envoie tout mon amour !",
-      created_at: "2026-01-23T09:45:00Z",
-    },
-    {
-      id: "4",
-      first_name: "Lucas",
-      last_name: "Petit",
-      email: "lucas.petit@email.com",
-      phone: "06 11 22 33 44",
-      attending: true,
-      number_of_guests: 1,
-      message: null,
-      created_at: "2026-01-22T16:20:00Z",
-    },
-    {
-      id: "5",
-      first_name: "Emma",
-      last_name: "Leroy",
-      email: "emma.leroy@email.com",
-      phone: "06 55 66 77 88",
-      attending: true,
-      number_of_guests: 4,
-      message: "Nous sommes si heureux pour vous deux ! Les enfants sont tres excites.",
-      created_at: "2026-01-21T11:00:00Z",
-    },
-    {
-      id: "6",
-      first_name: "Thomas",
-      last_name: "Moreau",
-      email: "thomas.moreau@email.com",
-      phone: null,
-      attending: false,
-      number_of_guests: 0,
-      message: null,
-      created_at: "2026-01-20T08:30:00Z",
-    },
-    {
-      id: "7",
-      first_name: "Julie",
-      last_name: "Garcia",
-      email: "julie.garcia@email.com",
-      phone: "06 99 88 77 66",
-      attending: true,
-      number_of_guests: 2,
-      message: "On a hate ! Felicitations a vous deux.",
-      created_at: "2026-01-19T15:45:00Z",
-    },
-    {
-      id: "8",
-      first_name: "Antoine",
-      last_name: "Roux",
-      email: "antoine.roux@email.com",
-      phone: "06 44 33 22 11",
-      attending: true,
-      number_of_guests: 1,
-      message: "Bravo ! Je serai la avec grand plaisir.",
-      created_at: "2026-01-26T12:00:00Z",
-    },
-]
 
 export default function DashboardContent() {
     const router = useRouter()
-    const [guests, setGuests] = useState(mockGuests);
+    const [guests, setGuests] = useState<Guest>([]);
+    const [loading, setLoading] = useState(false);
     const [userEmail, setUserEmail] = useState("houssouelvis@gmail.com");
 
-    const handleLogout = () => {
-        router.push("/admin/login")
+    const getGuest = async () => {
+        try {
+            setLoading(true)
+
+            const response = await Guest.get()
+            if (response.data.success) {
+                setGuests(response.data.guest)
+            }
+
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
     }
 
+    useEffect(() => {
+        getGuest();
+    }, [])
+
+
     // Calculate statistics
-    const totalGuests = guests.length
-    const attending = guests.filter((g) => g.attending)
-    const notAttending = guests.filter((g) => !g.attending)
+    const totalGuests = guests?.length
+    const attending = guests?.filter((g) => g.attending)
+    const notAttending = guests?.filter((g) => !g.attending)
     const totalAttendees = attending.reduce((sum, g) => sum + g.number_of_guests, 0)
-    const messagesCount = guests.filter((g) => g.message).length
+    const messagesCount = guests?.filter((g) => g.message).length
 
     const stats = [
         {
@@ -185,14 +113,6 @@ export default function DashboardContent() {
                 <span className="text-sm text-muted-foreground hidden sm:block">
                     {userEmail}
                 </span>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleLogout}
-                >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Deconnexion
-                </Button>
                 </div>
             </div>
             </header>

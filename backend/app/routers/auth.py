@@ -62,6 +62,28 @@ async def login_for_access_token(
     # })
     return response
 
+@router.post("/logout")
+async def logout(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    refresh_token = request.cookies.get("refresh_token")
+
+    if refresh_token:
+        db.query(RefreshToken).filter(
+            RefreshToken.token == refresh_token
+        ).delete()
+        db.commit()
+
+    response = JSONResponse(
+        content={"success": True, "message": "Logout successful"}
+    )
+
+    response.delete_cookie(key="access_token")
+    response.delete_cookie(key="refresh_token")
+    return response
+
 
 @router.get("/users/me/", response_model=UserResponse)
 async def read_users_me(
@@ -78,7 +100,7 @@ async def refresh_access_token_endpoint(
 
     db_token = db.query(RefreshToken).filter_by(token=refresh_token, is_revoked=False).first()
 
-    if not db_token or db_token.expires_at < datetime.now(timezone.utc):
+    if not db_token or db_token.expires_at.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
     
     # Crée un nouvel access token
@@ -92,7 +114,6 @@ async def refresh_access_token_endpoint(
         max_age=900,
     )
     return response
-    # return {"access_token": new_access_token, "token_type": "bearer"}
 
 
 @router.get("/users/me/items/")
